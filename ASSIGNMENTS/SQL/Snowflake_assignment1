@@ -1,0 +1,81 @@
+CREATE WAREHOUSE Demo_data2 WITH WAREHOUSE_SIZE = 'MEDIUM' WAREHOUSE_TYPE = 'STANDARD' AUTO_SUSPEND = 600 AUTO_RESUME = TRUE;
+use warehouse;
+create database Practice; 
+use database practice;
+
+
+
+create or replace table as_Sales_data
+(
+ORDER_ID varchar(60),
+ORDER_DATE date,
+SHIP_DATE date,
+SHIP_MODE CHAR(100),
+CUSTOMER_NAME VARCHAR(80),
+SEGMENT VARCHAR(100),
+ STATE VARCHAR(100),
+COUNTRY VARCHAR(100),
+MARKET VARCHAR(100),
+REGION VARCHAR(70),
+PRODUCT_ID VARCHAR(60),
+CATEGORY VARCHAR(290),
+SUB_CATEGORY VARCHAR(290),
+PRODUCT_NAME VARCHAR(290),
+SALES NUMBER(20),
+  QUANTITY NUMBER(10),
+  DISCOUNT NUMBER(10,3),
+  PROFIT NUMBER(10,3),
+  SHIPPING_COST NUMBER(10,4),
+  ORDER_PRIORITY CHAR(200),
+  YEAR NUMBER(7)
+
+);
+
+
+--assignment1 question1 set primary key to order id
+alter table as_sales_data
+add primary key(order_id);
+
+--assignment question2 Date data type changed in excel and upload using date data type 
+--assignment 3  extract the values from order id afte - from last one
+select split(order_id,'-')
+from as_sales_data;
+select*,
+split_part(order_id,'-',3) as extracted_order_id
+from as_sales_data;
+
+
+
+--assignment 4 if discount>0 then yes else false in new column discount_constraints
+select * from as_sales_data;
+select *,
+    case when DISCOUNT>0 then 'yes'
+    else 'false' 
+    end as discount_constraints
+from as_sales_data;
+
+
+-- Assignment 5 sum of all profit
+ 
+select sum(profit) as profit_Constraints
+from as_sales_data;
+
+
+
+
+--assignment 6 how much days taken for each order to process 
+select *, datediff('day',order_date,ship_date) as shipping_days
+from as_sales_data;
+
+
+/*assignment 7 the process_days or shipping days <= 3 make 5 rating <=6 but >3 make 4 ,
+<10 but >6 make 3 and  more than 2 make it 10*/
+select *, datediff('day',order_date,ship_date) as shipping_days,
+case 
+     when shipping_days <= 3 then '5 rating'
+     when shipping_days <= 6 and shipping_days >3 then '4 Rating'
+     when shipping_days < 10 and shipping_days > 6 then '3 Rating'
+     when shipping_days >10 then '2 Rating'
+     end as Delivery_Constraints
+ from as_sales_data;
+select * from as_sales_data;
